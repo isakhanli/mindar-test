@@ -1,4 +1,4 @@
-
+<!-- 
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -22,4 +22,81 @@
       </a-entity>
     </a-scene>
   </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Files</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label, input, button {
+            display: block;
+            margin: 10px 0;
+        }
+        #downloads {
+            margin-top: 20px;
+        }
+        .download-link {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Download Files by ID</h1>
+    <label for="inputId">Enter ID:</label>
+    <input type="text" id="inputId" placeholder="Enter ID here">
+    <button id="fetchBtn">Fetch Files</button>
+
+    <div id="downloads"></div>
+
+    <script>
+        document.getElementById('fetchBtn').addEventListener('click', function() {
+            const id = document.getElementById('inputId').value;
+            if (!id) {
+                alert('Please enter a valid ID');
+                return;
+            }
+
+            const url = `https://api.augdepot.com/ar/${id}`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const downloadsDiv = document.getElementById('downloads');
+                    downloadsDiv.innerHTML = ''; // Clear previous results
+
+                    if (data.status.description === 'Success') {
+                        const targetUrl = data.data.target.url;
+                        const attachmentList = data.data.attachmentList;
+
+                        // Creating download links
+                        let downloadLinks = '';
+
+                        downloadLinks += `<a href="${targetUrl}" target="_blank" class="download-link">Download Target</a><br/>`;
+
+                        attachmentList.forEach((attachment, index) => {
+                            downloadLinks += `<a href="${attachment.url}" target="_blank" class="download-link">Download Attachment ${index + 1}</a><br/>`;
+                        });
+
+                        downloadsDiv.innerHTML = downloadLinks;
+                    } else {
+                        downloadsDiv.innerHTML = 'Failed to fetch files. Please check the ID and try again.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching the data:', error);
+                    alert('An error occurred. Please try again later.');
+                });
+        });
+    </script>
+
+</body>
 </html>
+
