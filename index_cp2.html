@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  </head>
+  <body>
+    <a-scene mindar-image="imageTargetSrc: https://d3p7phf8s6jczq.cloudfront.net/test/demo1.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+		
+ 	<a-assets>
+		<video id="vid1" src="https://d3p7phf8s6jczq.cloudfront.net/test/demo1_a1.mp4" autoplay loop muted playsinline crossorigin="anonymous"></video> 
+		<video id="vid2" src="https://d3p7phf8s6jczq.cloudfront.net/test/demo1_a2.mp4" autoplay loop muted playsinline crossorigin="anonymous"></video>    
+		<video id="vid3" src="https://d3p7phf8s6jczq.cloudfront.net/test/demo1_a3.mp4" autoplay loop muted playsinline crossorigin="anonymous"></video>    
+	</a-assets>
+ 
+  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+	<a-entity mindar-image-target="targetIndex: 0">
+	  <a-video src="#vid1" width="16" height="9" position="0 0 0" scale="0.065 0.065 1"></a-video>        
+	</a-entity> 
+
+  <a-entity mindar-image-target="targetIndex: 1">
+	  <a-video src="#vid2" width="16" height="9" position="0 0 0" scale="0.065 0.065 1"></a-video>        
+	</a-entity> 
+
+  	<a-entity mindar-image-target="targetIndex: 2">
+	  <a-video src="#vid3" width="16" height="9" position="0 0 0" scale="0.065 0.065 1"></a-video>        
+	</a-entity> 
+
+    </a-scene>
+  </body>
+</html>
+
