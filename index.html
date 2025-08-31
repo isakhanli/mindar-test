@@ -104,18 +104,21 @@
       });
 
       targetEl.addEventListener('targetLost', () => {
-        videos[i].pause();    // stop video
-        videos[i].currentTime = 0; // optional: reset to start
-        videos[i].muted = true; // mute again
+        videos[i].pause();           // stop video
+        videos[i].currentTime = 0;   // reset to start
+        videos[i].muted = true;      // mute
         hideButton(buttons[i]);
       });
     });
 
-    // Start MindAR
+    // Start MindAR after scene loads
     const scene = document.getElementById('ar-scene');
     scene.addEventListener('loaded', async () => {
-      const mindarSystem = scene.systems["mindar"];
-      if (!mindarSystem) return console.error("MindAR system not found");
+      const mindarSystem = scene.systems["mindar-image"];
+      if (!mindarSystem) {
+        console.error("MindAR system not found");
+        return;
+      }
       await mindarSystem.start();
     });
   </script>
