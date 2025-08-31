@@ -38,16 +38,16 @@
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <a-entity mindar-image-target="targetIndex: 0">
-        <a-video src="#vid1" width="16" height="9" position="0 0 0" scale="0.065 0.065 1"></a-video>
+      <a-entity id="target0" mindar-image-target="targetIndex: 0">
+        <a-video id="video0" src="#vid1" width="16" height="9" position="0 0 0" scale="0.065 0.065 1"></a-video>
       </a-entity>
 
-      <a-entity mindar-image-target="targetIndex: 1">
-        <a-video src="#vid2" width="16" height="9" position="0 0 0" scale="0.065 0.065 1"></a-video>
+      <a-entity id="target1" mindar-image-target="targetIndex: 1">
+        <a-video id="video1" src="#vid2" width="16" height="9" position="0 0 0" scale="0.065 0.065 1"></a-video>
       </a-entity>
 
-      <a-entity mindar-image-target="targetIndex: 2">
-        <a-video src="#vid3" width="16" height="9" position="0 0 0" scale="0.065 0.065 1"></a-video>
+      <a-entity id="target2" mindar-image-target="targetIndex: 2">
+        <a-video id="video2" src="#vid3" width="16" height="9" position="0 0 0" scale="0.065 0.065 1"></a-video>
       </a-entity>
 
     </a-scene>
@@ -60,19 +60,31 @@
       btn.addEventListener('click', async () => {
         overlay.style.display = 'none';
 
-        // Wait for the scene to be loaded fully
+        // Wait for scene to load
         scene.addEventListener('loaded', async () => {
           const mindarSystem = scene.systems["mindar"];
-          if (!mindarSystem) {
-            console.error("MindAR system not found");
-            return;
-          }
+          if (!mindarSystem) { console.error("MindAR system not found"); return; }
           await mindarSystem.start();
 
-          // Play all videos
-          const videos = ["vid1", "vid2", "vid3"].map(id => document.getElementById(id));
-          videos.forEach(async (vid) => {
-            try { await vid.play(); } catch(err) { console.warn(err); }
+          // Play video when target is found
+          const targets = [
+            { id: "target0", videoId: "video0" },
+            { id: "target1", videoId: "video1" },
+            { id: "target2", videoId: "video2" }
+          ];
+
+          targets.forEach(({id, videoId}) => {
+            const targetEl = document.getElementById(id);
+            const videoEl = document.getElementById(videoId);
+
+            targetEl.addEventListener("targetFound", () => {
+              videoEl.play().catch(e => console.warn(e));
+            });
+
+            targetEl.addEventListener("targetLost", () => {
+              videoEl.pause();
+              videoEl.currentTime = 0;
+            });
           });
         });
       });
