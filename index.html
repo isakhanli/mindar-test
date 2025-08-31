@@ -58,22 +58,23 @@
   <script>
     const overlay = document.getElementById('start-overlay');
     const scene = document.getElementById('ar-scene');
+    const videos = Array.from(document.querySelectorAll('video'));
 
-    // Wait for first user interaction anywhere
+    // First user gesture triggers everything
     window.addEventListener('click', async function initAR() {
       overlay.style.display = 'none';
       window.removeEventListener('click', initAR);
 
-      // Start MindAR after user gesture
+      // 1️⃣ Play all videos immediately
+      for (const v of videos) {
+        try { await v.play(); } catch(e) { console.warn("Video play failed:", e); }
+      }
+
+      // 2️⃣ Start MindAR
       scene.addEventListener('loaded', async () => {
         const mindarSystem = scene.systems["mindar"];
         if (!mindarSystem) { console.error("MindAR system not found"); return; }
         await mindarSystem.start();
-
-        // Play all videos
-        document.querySelectorAll('video').forEach(v => {
-          v.play().catch(err => console.warn("Video play failed:", err));
-        });
       });
     }, { once: true });
   </script>
